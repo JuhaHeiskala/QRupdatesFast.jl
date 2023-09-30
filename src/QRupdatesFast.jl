@@ -106,9 +106,9 @@ for (f, elty) in ((:(:sqrshc_), :Float32), (:(:dqrshc_), :Float64))
             LinearAlgebra.chkstride1(Q)
             LinearAlgebra.chkstride1(R)
 
-            m = size(Q, 1)
-            n = size(R, 2)
-            k = size(R, 1)
+            m = Int32(size(Q, 1))
+            n = Int32(size(R, 2))
+            k = Int32(size(R, 1))
             ldq = size(Q, 1)
             ldr = size(R, 1)
             
@@ -116,11 +116,11 @@ for (f, elty) in ((:(:sqrshc_), :Float32), (:(:dqrshc_), :Float64))
 
             ccall(($f, QRupdate_ng_jll.libqrupdate), Cvoid,
                   (#    M             N            K
-                   Ref{Int64}, Ref{Int64}, Ref{Int64},
+                   Ref{Int32}, Ref{Int32}, Ref{Int32},
                    #    Q           LDQ           R 
-                   Ptr{$elty}, Ref{Int64}, Ptr{$elty},                       
+                   Ptr{$elty}, Ref{Int32}, Ptr{$elty},                       
                    #    LDR           I           J
-                   Ref{Int64}, Ref{Int64}, Ref{Int64},
+                   Ref{Int32}, Ref{Int32}, Ref{Int32},
                    #   work  
                    Ptr{$elty}),
                   m, n, k, Q, ldq, R, ldr, i, j, work)
@@ -141,9 +141,9 @@ for (f, elty,rty) in ((:(:cqrshc_), :ComplexF32, :Float32),
             LinearAlgebra.chkstride1(Q)
             LinearAlgebra.chkstride1(R)
 
-            m = size(Q, 1)
-            n = size(R, 2)
-            k = size(R, 1)
+            m = Int32(size(Q, 1))
+            n = Int32(size(R, 2))
+            k = Int32(size(R, 1))
             ldq = size(Q, 1)
             ldr = size(R, 1)
             
@@ -151,11 +151,11 @@ for (f, elty,rty) in ((:(:cqrshc_), :ComplexF32, :Float32),
             rwork = Vector{$rty}(undef, k)
             ccall(($f, QRupdate_ng_jll.libqrupdate), Cvoid,
                   (#    M             N            K
-                   Ref{Int64}, Ref{Int64}, Ref{Int64},
+                   Ref{Int32}, Ref{Int32}, Ref{Int32},
                    #    Q           LDQ           R 
-                   Ptr{$elty}, Ref{Int64}, Ptr{$elty},                       
+                   Ptr{$elty}, Ref{Int32}, Ptr{$elty},                       
                    #    LDR           I           J
-                   Ref{Int64}, Ref{Int64}, Ref{Int64},
+                   Ref{Int32}, Ref{Int32}, Ref{Int32},
                    #   work    real work
                    Ptr{$elty}, Ptr{$rty}),
                     m, n, k, Q, ldq, R, ldr, i, j, work, rwork)
@@ -201,17 +201,17 @@ for (f, elty) in ((:(:slu1up_), :Float32), (:(:dlu1up_), :Float64),
             LinearAlgebra.chkstride1(L)
             LinearAlgebra.chkstride1(R)
 
-            m = size(L, 1)
-            n = size(R, 2)
+            m = Int32(size(L, 1))
+            n = Int32(size(R, 2))
             ldl = size(L, 1)
             ldr = size(R, 1)
             
-            #ccall(($f, QRupdate_ng_jll.libqrupdate), Cvoid,
-            ccall(($f, libqrupdate), Cvoid,
+           
+            ccall(($f, QRupdate_ng_jll.libqrupdate), Cvoid, 
                   (#    M             N            L
-                   Ref{Int64}, Ref{Int64}, Ptr{$elty},
+                   Ref{Int32}, Ref{Int32}, Ptr{$elty},
                    #    LDL           R           LDR 
-                   Ref{Int64}, Ptr{$elty}, Ref{Int64},                       
+                   Ref{Int32}, Ptr{$elty}, Ref{Int32},                       
                    #    U             V
                    Ptr{$elty}, Ptr{$elty}),
                   m, n, L, ldl, R, ldr, x, y)
@@ -253,27 +253,27 @@ for (f, elty) in ((:(:slup1up_), :Float32), (:(:dlup1up_), :Float64),
                   (:(:clup1up_), :ComplexF32), (:(:zlup1up_), :ComplexF64))
     @eval begin
         function lup1up!(L::AbstractMatrix{$elty}, R::AbstractMatrix{$elty},
-                         p::AbstractVector{Int64},
+                         p::AbstractVector{Int32},
                          u::AbstractVector{$elty}, v::AbstractVector{$elty})
 
             Base.require_one_based_indexing(L, R)
             LinearAlgebra.chkstride1(L)
             LinearAlgebra.chkstride1(R)
 
-            m = size(L, 1)
-            n = size(R, 2)
+            m = Int32(size(L, 1))
+            n = Int32(size(R, 2))
             ldl = size(L, 1)
             ldr = size(R, 1)
             
             work = Vector{$elty}(undef, m)
 
-            ccall(($f, libqrupdate), Cvoid,
+            ccall(($f, QRupdate_ng_jll.libqrupdate), Cvoid,
                   (#    M             N            L
-                   Ref{Int64}, Ref{Int64}, Ptr{$elty},
+                   Ref{Int32}, Ref{Int32}, Ptr{$elty},
                    #    LDL           R           LDR 
-                   Ref{Int64}, Ptr{$elty}, Ref{Int64},                       
+                   Ref{Int32}, Ptr{$elty}, Ref{Int32},                       
                    #    P           U           V
-                   Ptr{Int64}, Ptr{$elty}, Ptr{$elty},
+                   Ptr{Int32}, Ptr{$elty}, Ptr{$elty},
                    #   WORK
                    Ptr{$elty}),
                   m, n, L, ldl, R, ldr, p, u, v, work)

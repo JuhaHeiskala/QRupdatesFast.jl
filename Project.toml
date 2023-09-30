@@ -1,7 +1,7 @@
 name = "QRupdatesFast"
 uuid = "20ee83fe-e634-4b6c-9f98-3c5eb64c79e6"
 authors = ["Juha Heiskala <juha.t.heiskala@iki.fi>"]
-version = "1.0.0"
+version = "1.0.1"
 
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
@@ -10,4 +10,5 @@ libblastrampoline_jll = "8e850b90-86db-534c-a0d3-1478176c7d93"
 
 [compat]
 julia = "1"
+QRupdate_ng_jll="1.1.5"
 
